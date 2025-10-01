@@ -2,19 +2,31 @@ const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { Pool } = require('pg');
 const winston = require('winston');
 const DailyRotateFile = require('winston-daily-rotate-file');
+
+// 환경에 따른 데이터베이스 설정
+const isProduction = process.env.NODE_ENV === 'production';
+const usePostgreSQL = process.env.DATABASE_URL && process.env.DATABASE_URL.startsWith('postgresql://');
+
+let db, pool;
+
+if (usePostgreSQL) {
+  // PostgreSQL 사용 (Railway 배포 시)
+  const { Pool } = require('pg');
+  pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: isProduction ? { rejectUnauthorized: false } : false
+  });
+} else {
+  // SQLite 사용 (로컬 개발 시)
+  const Database = require('better-sqlite3');
+  db = new Database('jpsentence.db');
+}
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
-
-// PostgreSQL 연결 설정
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
-});
 
 // 로거 설정
 const logger = winston.createLogger({
@@ -54,35 +66,95 @@ const logger = winston.createLogger({
 // 데이터베이스 초기화
 async function initializeDatabase() {
   try {
-    // users 테이블 생성
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS users (
-        id SERIAL PRIMARY KEY,
-        username VARCHAR(50) UNIQUE NOT NULL,
-        email VARCHAR(100) UNIQUE NOT NULL,
-        password VARCHAR(255) NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
+    if (usePostgreSQL) {
+      // PostgreSQL 테이블 생성
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS users (
+          id SERIAL PRIMARY KEY,
+          username VARCHAR(50) UNIQUE NOT NULL,
+          email VARCHAR(100) UNIQUE NOT NULL,
+          password VARCHAR(255) NOT NULL,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
 
-    // sentences 테이블 생성
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS sentences (
-        id SERIAL PRIMARY KEY,
-        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-        japanese_text TEXT NOT NULL,
-        korean_meaning TEXT NOT NULL,
-        pass_count INTEGER DEFAULT 0,
-        fail_count INTEGER DEFAULT 0,
-        last_studied TIMESTAMP,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS sentences (
+          id SERIAL PRIMARY KEY,
+          user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+          japanese_text TEXT NOT NULL,
+          korean_meaning TEXT NOT NULL,
+          pass_count INTEGER DEFAULT 0,
+          fail_count INTEGER DEFAULT 0,
+          last_studied TIMESTAMP,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
+    } else {
+      // SQLite 테이블 생성
+      db.exec(`
+        CREATE TABLE IF NOT EXISTS users (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          username VARCHAR(50) UNIQUE NOT NULL,
+          email VARCHAR(100) UNIQUE NOT NULL,
+          password VARCHAR(255) NOT NULL,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
+
+      db.exec(`
+        CREATE TABLE IF NOT EXISTS sentences (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+          japanese_text TEXT NOT NULL,
+          korean_meaning TEXT NOT NULL,
+          pass_count INTEGER DEFAULT 0,
+          fail_count INTEGER DEFAULT 0,
+          last_studied DATETIME,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
+
+      // 기존 테이블에 컬럼 추가 (이미 존재하는 경우 무시됨)
+      try {
+        db.exec(`ALTER TABLE sentences ADD COLUMN pass_count INTEGER DEFAULT 0`);
+      } catch (e) {
+        // 컬럼이 이미 존재하는 경우 무시
+      }
+      
+      try {
+        db.exec(`ALTER TABLE sentences ADD COLUMN fail_count INTEGER DEFAULT 0`);
+      } catch (e) {
+        // 컬럼이 이미 존재하는 경우 무시
+      }
+      
+      try {
+        db.exec(`ALTER TABLE sentences ADD COLUMN last_studied DATETIME`);
+      } catch (e) {
+        // 컬럼이 이미 존재하는 경우 무시
+      }
+    }
 
     logger.info('데이터베이스 초기화 완료');
   } catch (error) {
     logger.error('데이터베이스 초기화 실패:', error);
     throw error;
+  }
+}
+
+// 데이터베이스 쿼리 헬퍼 함수
+async function queryDatabase(sql, params = []) {
+  if (usePostgreSQL) {
+    const result = await pool.query(sql, params);
+    return result.rows;
+  } else {
+    const stmt = db.prepare(sql);
+    if (sql.trim().toUpperCase().startsWith('SELECT')) {
+      return stmt.all(params);
+    } else {
+      const result = stmt.run(params);
+      return { insertId: result.lastInsertRowid, changes: result.changes };
+    }
   }
 }
 
@@ -146,15 +218,15 @@ app.post('/api/register', async (req, res) => {
     }
 
     // 중복 사용자명 확인
-    const existingUser = await pool.query('SELECT id FROM users WHERE username = $1', [username]);
-    if (existingUser.rows.length > 0) {
+    const existingUser = await queryDatabase('SELECT id FROM users WHERE username = ?', [username]);
+    if (existingUser.length > 0) {
       logger.warn('회원가입 실패: 사용자명 중복', { username, clientIP });
       return res.status(400).json({ error: '이미 사용 중인 사용자명입니다.' });
     }
 
     // 중복 이메일 확인
-    const existingEmail = await pool.query('SELECT id FROM users WHERE email = $1', [email]);
-    if (existingEmail.rows.length > 0) {
+    const existingEmail = await queryDatabase('SELECT id FROM users WHERE email = ?', [email]);
+    if (existingEmail.length > 0) {
       logger.warn('회원가입 실패: 이메일 중복', { email, clientIP });
       return res.status(400).json({ error: '이미 사용 중인 이메일입니다.' });
     }
@@ -163,12 +235,12 @@ app.post('/api/register', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // 사용자 생성
-    const result = await pool.query(
-      'INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING id',
+    const result = await queryDatabase(
+      'INSERT INTO users (username, email, password) VALUES (?, ?, ?)',
       [username, email, hashedPassword]
     );
 
-    const userId = result.rows[0].id;
+    const userId = result.insertId || result[0]?.id;
 
     logger.info('회원가입 성공', { 
       userId, 
@@ -219,8 +291,8 @@ app.post('/api/login', async (req, res) => {
     }
 
     // 사용자 조회
-    const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
-    const user = result.rows[0];
+    const result = await queryDatabase('SELECT * FROM users WHERE email = ?', [email]);
+    const user = result[0];
 
     if (!user) {
       logger.warn('로그인 실패: 사용자 없음', { email, clientIP });
@@ -293,12 +365,12 @@ app.post('/api/sentences', authenticateToken, async (req, res) => {
       return res.status(400).json({ error: '일본어 문장과 한국어 뜻을 모두 입력해주세요.' });
     }
 
-    const result = await pool.query(
-      'INSERT INTO sentences (user_id, japanese_text, korean_meaning) VALUES ($1, $2, $3) RETURNING id',
+    const result = await queryDatabase(
+      'INSERT INTO sentences (user_id, japanese_text, korean_meaning) VALUES (?, ?, ?)',
       [req.user.userId, japaneseText, koreanMeaning]
     );
 
-    const sentenceId = result.rows[0].id;
+    const sentenceId = result.insertId || result[0]?.id;
 
     logger.info('문장 등록 성공', { 
       sentenceId, 
@@ -321,12 +393,12 @@ app.post('/api/sentences', authenticateToken, async (req, res) => {
 // 문장 목록 조회
 app.get('/api/sentences', authenticateToken, async (req, res) => {
   try {
-    const result = await pool.query(
-      'SELECT * FROM sentences WHERE user_id = $1 ORDER BY created_at DESC',
+    const result = await queryDatabase(
+      'SELECT * FROM sentences WHERE user_id = ? ORDER BY created_at DESC',
       [req.user.userId]
     );
 
-    res.json(result.rows);
+    res.json(result);
   } catch (error) {
     logger.error('문장 목록 조회 오류:', { 
       error: error.message, 
@@ -339,27 +411,167 @@ app.get('/api/sentences', authenticateToken, async (req, res) => {
 
 // 시험 결과 제출
 app.post('/api/test-result', authenticateToken, async (req, res) => {
+  const clientIP = req.ip || req.connection.remoteAddress;
+  
   try {
-    const { sentenceId, passed } = req.body;
+    const { sentenceId, passed, score } = req.body;
+
+    logger.info('시험 결과 제출 시도', { 
+      userId: req.user.userId, 
+      sentenceId, 
+      passed, 
+      score,
+      clientIP 
+    });
 
     if (passed) {
-      await pool.query(
-        'UPDATE sentences SET pass_count = pass_count + 1, last_studied = CURRENT_TIMESTAMP WHERE id = $1 AND user_id = $2',
+      await queryDatabase(
+        'UPDATE sentences SET pass_count = COALESCE(pass_count, 0) + 1, last_studied = datetime(\'now\') WHERE id = ? AND user_id = ?',
         [sentenceId, req.user.userId]
       );
     } else {
-      await pool.query(
-        'UPDATE sentences SET fail_count = fail_count + 1, last_studied = CURRENT_TIMESTAMP WHERE id = $1 AND user_id = $2',
+      await queryDatabase(
+        'UPDATE sentences SET fail_count = COALESCE(fail_count, 0) + 1, last_studied = datetime(\'now\') WHERE id = ? AND user_id = ?',
         [sentenceId, req.user.userId]
       );
     }
+
+    logger.info('시험 결과 저장 성공', { 
+      userId: req.user.userId, 
+      sentenceId, 
+      passed,
+      clientIP 
+    });
 
     res.json({ message: '시험 결과가 저장되었습니다.' });
   } catch (error) {
     logger.error('시험 결과 저장 오류:', { 
       error: error.message, 
       stack: error.stack, 
-      userId: req.user.userId 
+      userId: req.user.userId,
+      clientIP 
+    });
+    res.status(500).json({ error: '서버 오류가 발생했습니다.' });
+  }
+});
+
+// 문장 수정
+app.put('/api/sentences/:id', authenticateToken, async (req, res) => {
+  const clientIP = req.ip || req.connection.remoteAddress;
+  
+  try {
+    const { id } = req.params;
+    const { japaneseText, koreanMeaning } = req.body;
+
+    logger.info('문장 수정 시도', { 
+      sentenceId: id,
+      userId: req.user.userId, 
+      japaneseText, 
+      koreanMeaning, 
+      clientIP 
+    });
+
+    if (!japaneseText || !koreanMeaning) {
+      logger.warn('문장 수정 실패: 필수 필드 누락', { 
+        sentenceId: id,
+        japaneseText, 
+        koreanMeaning, 
+        clientIP 
+      });
+      return res.status(400).json({ error: '일본어 문장과 한국어 뜻을 모두 입력해주세요.' });
+    }
+
+    // 문장이 해당 사용자의 것인지 확인
+    const checkResult = await queryDatabase(
+      'SELECT id FROM sentences WHERE id = ? AND user_id = ?',
+      [id, req.user.userId]
+    );
+
+    if (checkResult.length === 0) {
+      logger.warn('문장 수정 실패: 권한 없음', { 
+        sentenceId: id,
+        userId: req.user.userId, 
+        clientIP 
+      });
+      return res.status(404).json({ error: '문장을 찾을 수 없습니다.' });
+    }
+
+    // 문장 수정
+    await queryDatabase(
+      'UPDATE sentences SET japanese_text = ?, korean_meaning = ? WHERE id = ? AND user_id = ?',
+      [japaneseText, koreanMeaning, id, req.user.userId]
+    );
+
+    logger.info('문장 수정 성공', { 
+      sentenceId: id,
+      userId: req.user.userId, 
+      clientIP 
+    });
+
+    res.json({ message: '문장이 수정되었습니다.' });
+  } catch (error) {
+    logger.error('문장 수정 오류:', { 
+      error: error.message, 
+      stack: error.stack, 
+      clientIP,
+      body: req.body 
+    });
+    res.status(500).json({ error: '서버 오류가 발생했습니다.' });
+  }
+});
+
+// 시험 문장 조회
+app.get('/api/test-sentences', authenticateToken, async (req, res) => {
+  const clientIP = req.ip || req.connection.remoteAddress;
+  
+  try {
+    const { count, date } = req.query;
+    const sentenceCount = parseInt(count) || 5;
+    const filterDate = date || null;
+
+    logger.info('시험 문장 조회 시도', { 
+      userId: req.user.userId, 
+      count: sentenceCount,
+      date: filterDate,
+      clientIP 
+    });
+
+    let query, params;
+    
+    if (filterDate) {
+      // 특정 날짜의 문장 조회
+      query = 'SELECT * FROM sentences WHERE user_id = ? AND DATE(created_at) = ? ORDER BY RANDOM() LIMIT ?';
+      params = [req.user.userId, filterDate, sentenceCount];
+    } else {
+      // 모든 문장에서 랜덤 조회
+      query = 'SELECT * FROM sentences WHERE user_id = ? ORDER BY RANDOM() LIMIT ?';
+      params = [req.user.userId, sentenceCount];
+    }
+
+    const result = await queryDatabase(query, params);
+
+    if (result.length === 0) {
+      logger.warn('시험 문장 없음', { 
+        userId: req.user.userId, 
+        count: sentenceCount,
+        date: filterDate,
+        clientIP 
+      });
+      return res.status(404).json({ error: '선택한 조건에 맞는 문장이 없습니다.' });
+    }
+
+    logger.info('시험 문장 조회 성공', { 
+      userId: req.user.userId, 
+      count: result.length,
+      clientIP 
+    });
+
+    res.json(result);
+  } catch (error) {
+    logger.error('시험 문장 조회 오류:', { 
+      error: error.message, 
+      stack: error.stack, 
+      clientIP 
     });
     res.status(500).json({ error: '서버 오류가 발생했습니다.' });
   }
@@ -368,8 +580,8 @@ app.post('/api/test-result', authenticateToken, async (req, res) => {
 // 디버그 엔드포인트 (개발용)
 app.get('/api/debug/users', async (req, res) => {
   try {
-    const result = await pool.query('SELECT id, username, email, created_at FROM users');
-    res.json(result.rows);
+    const result = await queryDatabase('SELECT id, username, email, created_at FROM users');
+    res.json(result);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

@@ -81,6 +81,11 @@ export interface AddSentenceRequest {
   koreanMeaning: string;
 }
 
+export interface UpdateSentenceRequest {
+  japaneseText: string;
+  koreanMeaning: string;
+}
+
 export interface TestResultRequest {
   sentenceId: number;
   passed: boolean;
@@ -103,6 +108,9 @@ export const sentenceAPI = {
   
   addSentence: (data: AddSentenceRequest): Promise<{ message: string; sentenceId: number }> =>
     api.post('/sentences', data).then(res => res.data),
+  
+  updateSentence: (id: number, data: UpdateSentenceRequest): Promise<{ message: string }> =>
+    api.put(`/sentences/${id}`, data).then(res => res.data),
   
   getTestSentences: (count: number, date?: string): Promise<Sentence[]> =>
     api.get('/test-sentences', { params: { count, date } }).then(res => res.data),

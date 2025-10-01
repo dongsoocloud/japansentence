@@ -84,14 +84,14 @@ const AddSentenceModal: React.FC<AddSentenceModalProps> = ({ onClose, onSuccess 
               onClick={onClose}
               className="cancel-btn"
             >
-              취소
+              ✕
             </button>
             <button 
               type="submit" 
               disabled={loading}
               className="submit-btn"
             >
-              {loading ? '등록 중...' : '문장 등록'}
+              {loading ? '등록 중...' : '등록'}
             </button>
           </div>
         </form>

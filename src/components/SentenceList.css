@@ -129,14 +129,128 @@
   flex-direction: column;
 }
 
+/* 기존 sentence-item 스타일은 위에서 정의됨 */
+
 .sentence-item {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   padding: 0.4rem 0.8rem;
   border-bottom: 1px solid #f1f3f4;
   gap: 1rem;
+  min-height: 80px; /* 최소 높이 설정 */
 }
+
+.sentence-item.clickable {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.sentence-item.clickable:hover {
+  background-color: #f8f9fa;
+}
+
+.sentence-item.editing {
+  background-color: #f8f9fa;
+  border: 2px solid #3498db;
+  border-radius: 8px;
+  margin: 0.2rem 0;
+}
+
+.sentence-display {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  width: 100%;
+}
+
+.sentence-edit-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 80px; /* 일반 카드와 동일한 높이 */
+}
+
+.edit-form-content {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  flex: 1;
+  margin-bottom: 0.5rem;
+}
+
+.edit-form-content .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  flex: 1;
+}
+
+.edit-form-content label {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 0.9rem;
+}
+
+.edit-textarea {
+  width: 100%;
+  padding: 0.4rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  resize: none;
+  height: 50px;
+  overflow-y: auto;
+}
+
+.edit-textarea:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.edit-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  align-items: center;
+  min-width: 140px;
+  flex-shrink: 0;
+}
+
+.save-btn {
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.save-btn:hover {
+  background-color: #229954;
+}
+
+.cancel-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.cancel-btn:hover {
+  background-color: #c0392b;
+}
+
+/* edit-btn 스타일 제거 - 더 이상 사용하지 않음 */
 
 .sentence-item:last-child {
   border-bottom: none;
@@ -314,5 +428,16 @@
   
   .japanese-text {
     font-size: 0.85rem;
+  }
+  
+  .edit-form-content {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .edit-actions {
+    min-width: auto;
+    width: 100%;
+    justify-content: center;
   }
 }
