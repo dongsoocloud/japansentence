@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import ThemeToggle from './ThemeToggle';
 import './Navbar.css';
 
 interface User {
@@ -34,6 +35,7 @@ const Navbar: React.FC<NavbarProps> = ({ user, onLogout }) => {
         </div>
         
         <div className="navbar-user">
+          <ThemeToggle />
           <Link to="/profile" className="user-name">{user.username}님</Link>
           <button onClick={onLogout} className="logout-btn">
             로그아웃

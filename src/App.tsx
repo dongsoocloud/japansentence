@@ -7,6 +7,7 @@ import SentenceList from './components/SentenceList';
 import Test from './components/Test';
 import UserProfile from './components/UserProfile';
 import Navbar from './components/Navbar';
+import { ThemeProvider } from './contexts/ThemeContext';
 import './App.css';
 
 interface User {
@@ -46,47 +47,49 @@ function App() {
   }
 
   return (
-    <Router>
-      <div className="App">
-        {user && <Navbar user={user} onLogout={handleLogout} />}
-        <Routes>
-          <Route 
-            path="/login" 
-            element={user ? <Navigate to="/dashboard" /> : <Login onLogin={handleLogin} />} 
-          />
-          <Route 
-            path="/register" 
-            element={user ? <Navigate to="/dashboard" /> : <Register onLogin={handleLogin} />} 
-          />
-          <Route 
-            path="/dashboard" 
-            element={user ? <Dashboard /> : <Navigate to="/login" />} 
-          />
-          <Route 
-            path="/sentences" 
-            element={user ? <SentenceList /> : <Navigate to="/login" />} 
-          />
-          <Route 
-            path="/test" 
-            element={user ? <Test /> : <Navigate to="/login" />} 
-          />
-          <Route 
-            path="/profile" 
-            element={user ? <UserProfile user={user} onLogout={handleLogout} /> : <Navigate to="/login" />} 
-          />
-          <Route 
-            path="/" 
-            element={<Navigate to={user ? "/dashboard" : "/login"} />} 
-          />
-        </Routes>
-        
-        <footer className="app-footer">
-          <div className="footer-content">
-            <p>제작자: 김동수 (일본 클라우드 엔지니어)</p>
-          </div>
-        </footer>
-      </div>
-    </Router>
+    <ThemeProvider>
+      <Router>
+        <div className="App">
+          {user && <Navbar user={user} onLogout={handleLogout} />}
+          <Routes>
+            <Route 
+              path="/login" 
+              element={user ? <Navigate to="/dashboard" /> : <Login onLogin={handleLogin} />} 
+            />
+            <Route 
+              path="/register" 
+              element={user ? <Navigate to="/dashboard" /> : <Register onLogin={handleLogin} />} 
+            />
+            <Route 
+              path="/dashboard" 
+              element={user ? <Dashboard /> : <Navigate to="/login" />} 
+            />
+            <Route 
+              path="/sentences" 
+              element={user ? <SentenceList /> : <Navigate to="/login" />} 
+            />
+            <Route 
+              path="/test" 
+              element={user ? <Test /> : <Navigate to="/login" />} 
+            />
+            <Route 
+              path="/profile" 
+              element={user ? <UserProfile user={user} onLogout={handleLogout} /> : <Navigate to="/login" />} 
+            />
+            <Route 
+              path="/" 
+              element={<Navigate to={user ? "/dashboard" : "/login"} />} 
+            />
+          </Routes>
+          
+          <footer className="app-footer">
+            <div className="footer-content">
+              <p>제작자: 김동수 (일본 클라우드 엔지니어)</p>
+            </div>
+          </footer>
+        </div>
+      </Router>
+    </ThemeProvider>
   );
 }
 
