@@ -173,8 +173,19 @@ app.use(express.json());
 if (process.env.NODE_ENV === 'production') {
   // React 빌드 파일 서빙
   const buildPath = path.join(__dirname, 'build');
+  const fs = require('fs');
+  
   console.log('Build path:', buildPath);
-  console.log('Build directory exists:', require('fs').existsSync(buildPath));
+  console.log('Build directory exists:', fs.existsSync(buildPath));
+  
+  if (fs.existsSync(buildPath)) {
+    const buildContents = fs.readdirSync(buildPath);
+    console.log('Build directory contents:', buildContents);
+    
+    const indexPath = path.join(buildPath, 'index.html');
+    console.log('index.html exists:', fs.existsSync(indexPath));
+  }
+  
   app.use(express.static(buildPath));
 }
 
@@ -606,10 +617,15 @@ app.get('/api/debug/users', async (req, res) => {
 // React 앱의 모든 라우트를 처리 (프로덕션 환경에서)
 if (process.env.NODE_ENV === 'production') {
   app.get('*', (req, res) => {
+    console.log('Handling request for:', req.path);
     const indexPath = path.join(__dirname, 'build', 'index.html');
+    console.log('Looking for index.html at:', indexPath);
+    
     if (require('fs').existsSync(indexPath)) {
+      console.log('Serving index.html');
       res.sendFile(indexPath);
     } else {
+      console.log('index.html not found, serving fallback');
       res.status(404).send(`
         <html>
           <head><title>Application Loading</title></head>
@@ -617,6 +633,8 @@ if (process.env.NODE_ENV === 'production') {
             <h1>Application is starting up...</h1>
             <p>Please wait a moment and refresh the page.</p>
             <p>If this message persists, the React build may have failed.</p>
+            <p>Build path: ${path.join(__dirname, 'build')}</p>
+            <p>Index path: ${indexPath}</p>
           </body>
         </html>
       `);
