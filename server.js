@@ -186,7 +186,8 @@ if (process.env.NODE_ENV === 'production') {
     console.log('index.html exists:', fs.existsSync(indexPath));
   }
   
-  app.use(express.static(buildPath));
+  // 정적 파일 서빙 (우선순위를 높이기 위해 API 라우트보다 먼저 설정)
+  app.use(express.static(buildPath, { index: 'index.html' }));
 }
 
 // JWT 토큰 인증 미들웨어
@@ -207,7 +208,7 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
-// API 라우트
+// API 라우트 (모든 API는 /api 경로로 시작)
 
 // 회원가입
 app.post('/api/register', async (req, res) => {
