@@ -37,23 +37,24 @@
 }
 
 .dashboard-header h1 {
-  color: #2c3e50;
+  color: var(--text-primary);
   margin-bottom: 0.5rem;
   font-size: 2.5rem;
 }
 
 .dashboard-header p {
-  color: #7f8c8d;
+  color: var(--text-secondary);
   font-size: 1.1rem;
 }
 
 .dashboard-stats {
-  background: white;
+  background: var(--card-bg);
   padding: 2rem;
   border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px var(--shadow);
   margin-bottom: 2rem;
-  border-left: 4px solid #3498db;
+  border-left: 4px solid var(--accent-color);
+  border: 1px solid var(--border-color);
 }
 
 .stats-container {
@@ -71,7 +72,7 @@
 }
 
 .stat-item h3 {
-  color: #555;
+  color: var(--text-secondary);
   margin-bottom: 0.5rem;
   font-size: 1rem;
 }
@@ -79,15 +80,15 @@
 .stat-number {
   font-size: 2rem;
   font-weight: bold;
-  color: #2c3e50;
+  color: var(--text-primary);
 }
 
 .stat-number.success {
-  color: #27ae60;
+  color: var(--success-color);
 }
 
 .stat-number.error {
-  color: #e74c3c;
+  color: var(--danger-color);
 }
 
 .dashboard-actions {
@@ -98,22 +99,41 @@
 }
 
 .action-card {
-  background: white;
+  background: var(--card-bg);
   padding: 1.5rem;
   border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px var(--shadow);
   text-decoration: none;
-  color: inherit;
-  transition: transform 0.3s, box-shadow 0.3s;
-  border: 2px solid transparent;
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+  border: 2px solid var(--border-color);
   flex: 1;
   min-width: 200px;
+  position: relative;
+  overflow: hidden;
+}
+
+.action-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent-color), var(--success-color));
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
 }
 
 .action-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 15px rgba(0,0,0,0.2);
-  border-color: #3498db;
+  box-shadow: 0 8px 25px var(--shadow);
+  border-color: var(--accent-color);
+  background: var(--bg-secondary);
+}
+
+.action-card:hover::before {
+  transform: scaleX(1);
 }
 
 .action-icon {
@@ -123,26 +143,29 @@
 }
 
 .action-card h3 {
-  color: #2c3e50;
+  color: var(--text-primary);
   margin-bottom: 0.5rem;
   font-size: 1.2rem;
+  font-weight: 600;
 }
 
 .action-card p {
-  color: #7f8c8d;
+  color: var(--text-secondary);
   margin: 0;
   font-size: 0.9rem;
+  line-height: 1.4;
 }
 
 .recent-sentences {
-  background: white;
+  background: var(--card-bg);
   padding: 2rem;
   border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px var(--shadow);
+  border: 1px solid var(--border-color);
 }
 
 .recent-sentences h2 {
-  color: #2c3e50;
+  color: var(--text-primary);
   margin-bottom: 1.5rem;
   font-size: 1.5rem;
 }
@@ -158,9 +181,17 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  border: 1px solid #e1e8ed;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
-  background-color: #f8f9fa;
+  background-color: var(--bg-secondary);
+  transition: all 0.3s ease;
+}
+
+.sentence-item:hover {
+  background-color: var(--bg-tertiary);
+  border-color: var(--accent-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow);
 }
 
 .sentence-content {
@@ -170,14 +201,14 @@
 .japanese-text {
   font-size: 1.3rem;
   font-weight: 500;
-  color: #2c3e50;
+  color: var(--text-primary);
   margin-bottom: 0.5rem;
   line-height: 1.5;
   word-break: keep-all;
 }
 
 .korean-meaning {
-  color: #7f8c8d;
+  color: var(--text-secondary);
   margin-bottom: 0.25rem;
   font-size: 1.1rem;
   line-height: 1.4;
@@ -185,7 +216,7 @@
 }
 
 .furigana {
-  color: #95a5a6;
+  color: var(--text-muted);
   font-size: 0.9rem;
   font-style: italic;
 }
@@ -197,12 +228,12 @@
 }
 
 .pass-count {
-  color: #27ae60;
+  color: var(--success-color);
   font-weight: 500;
 }
 
 .fail-count {
-  color: #e74c3c;
+  color: var(--danger-color);
   font-weight: 500;
 }
 
@@ -210,7 +241,7 @@
   text-align: center;
   padding: 2rem;
   font-size: 1.2rem;
-  color: #7f8c8d;
+  color: var(--text-secondary);
 }
 
 @media (max-width: 1200px) {
