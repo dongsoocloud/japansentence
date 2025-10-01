@@ -172,7 +172,10 @@ app.use(express.json());
 // React 앱을 정적 파일로 서빙 (프로덕션 환경에서)
 if (process.env.NODE_ENV === 'production') {
   // React 빌드 파일 서빙
-  app.use(express.static(path.join(__dirname, 'build')));
+  const buildPath = path.join(__dirname, 'build');
+  console.log('Build path:', buildPath);
+  console.log('Build directory exists:', require('fs').existsSync(buildPath));
+  app.use(express.static(buildPath));
 }
 
 // JWT 토큰 인증 미들웨어
@@ -603,7 +606,21 @@ app.get('/api/debug/users', async (req, res) => {
 // React 앱의 모든 라우트를 처리 (프로덕션 환경에서)
 if (process.env.NODE_ENV === 'production') {
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+    const indexPath = path.join(__dirname, 'build', 'index.html');
+    if (require('fs').existsSync(indexPath)) {
+      res.sendFile(indexPath);
+    } else {
+      res.status(404).send(`
+        <html>
+          <head><title>Application Loading</title></head>
+          <body>
+            <h1>Application is starting up...</h1>
+            <p>Please wait a moment and refresh the page.</p>
+            <p>If this message persists, the React build may have failed.</p>
+          </body>
+        </html>
+      `);
+    }
   });
 }
 
