@@ -21,6 +21,26 @@
   text-decoration: none;
 }
 
+.navbar-brand .title-秀 {
+  color: #e91e63; /* 분홍색 */
+  font-size: 1.7rem;
+}
+
+.navbar-brand .title-일 {
+  color: #ff6b35; /* 주황색 */
+  font-weight: 900;
+}
+
+.navbar-brand .title-통 {
+  color: #4ecdc4; /* 청록색 */
+  font-weight: 900;
+}
+
+.navbar-brand .title-암 {
+  color: #a8e6cf; /* 연두색 */
+  font-weight: 900;
+}
+
 .navbar-brand:hover {
   color: #3498db;
 }
@@ -51,6 +71,17 @@
 
 .user-name {
   font-weight: 500;
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+  cursor: pointer;
+}
+
+.user-name:hover {
+  background-color: #34495e;
+  color: white;
 }
 
 .logout-btn {

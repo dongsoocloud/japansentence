@@ -18,7 +18,7 @@ const Navbar: React.FC<NavbarProps> = ({ user, onLogout }) => {
     <nav className="navbar">
       <div className="navbar-container">
         <Link to="/dashboard" className="navbar-brand">
-          일본어 문장 학습
+          <span className="title-秀">秀</span>: <span className="title-일">일</span>본어 <span className="title-통">통</span>문장 <span className="title-암">암</span>기
         </Link>
         
         <div className="navbar-menu">
@@ -31,13 +31,10 @@ const Navbar: React.FC<NavbarProps> = ({ user, onLogout }) => {
           <Link to="/test" className="navbar-item">
             시험 보기
           </Link>
-          <Link to="/profile" className="navbar-item">
-            프로필
-          </Link>
         </div>
         
         <div className="navbar-user">
-          <span className="user-name">{user.username}님</span>
+          <Link to="/profile" className="user-name">{user.username}님</Link>
           <button onClick={onLogout} className="logout-btn">
             로그아웃
           </button>

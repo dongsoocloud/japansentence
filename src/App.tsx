@@ -79,6 +79,12 @@ function App() {
             element={<Navigate to={user ? "/dashboard" : "/login"} />} 
           />
         </Routes>
+        
+        <footer className="app-footer">
+          <div className="footer-content">
+            <p>제작자: 김동수 (일본 클라우드 엔지니어)</p>
+          </div>
+        </footer>
       </div>
     </Router>
   );
