@@ -52,16 +52,18 @@
 }
 
 .navbar-item {
-  color: white;
+  color: var(--text-primary);
   text-decoration: none;
   padding: 0.5rem 1rem;
   border-radius: 4px;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
+  font-weight: 500;
 }
 
 .navbar-item:hover {
-  background-color: #34495e;
-  color: white;
+  background-color: var(--bg-tertiary);
+  color: var(--accent-color);
+  transform: translateY(-1px);
 }
 
 .navbar-user {
@@ -72,31 +74,36 @@
 
 .user-name {
   font-weight: 500;
-  color: white;
+  color: var(--text-primary);
   text-decoration: none;
   padding: 0.5rem 1rem;
   border-radius: 4px;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
   cursor: pointer;
 }
 
 .user-name:hover {
-  background-color: #34495e;
-  color: white;
+  background-color: var(--bg-tertiary);
+  color: var(--accent-color);
+  transform: translateY(-1px);
 }
 
 .logout-btn {
-  background-color: #e74c3c;
-  color: white;
+  background-color: var(--danger-color);
+  color: var(--button-text);
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
+  font-weight: 500;
 }
 
 .logout-btn:hover {
-  background-color: #c0392b;
+  background-color: var(--danger-color);
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
 }
 
 @media (max-width: 768px) {
