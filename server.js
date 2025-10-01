@@ -461,22 +461,43 @@ app.post('/api/test-result', authenticateToken, async (req, res) => {
     });
 
     if (passed) {
-      await queryDatabase(
-        'UPDATE sentences SET pass_count = COALESCE(pass_count, 0) + 1, last_studied = datetime(\'now\') WHERE id = ? AND user_id = ?',
-        [sentenceId, req.user.userId]
-      );
+      if (usePostgreSQL) {
+        await queryDatabase(
+          'UPDATE sentences SET pass_count = COALESCE(pass_count, 0) + 1, last_studied = NOW() WHERE id = $1 AND user_id = $2',
+          [sentenceId, req.user.userId]
+        );
+      } else {
+        await queryDatabase(
+          'UPDATE sentences SET pass_count = COALESCE(pass_count, 0) + 1, last_studied = datetime(\'now\') WHERE id = ? AND user_id = ?',
+          [sentenceId, req.user.userId]
+        );
+      }
     } else {
-      await queryDatabase(
-        'UPDATE sentences SET fail_count = COALESCE(fail_count, 0) + 1, last_studied = datetime(\'now\') WHERE id = ? AND user_id = ?',
-        [sentenceId, req.user.userId]
-      );
+      if (usePostgreSQL) {
+        await queryDatabase(
+          'UPDATE sentences SET fail_count = COALESCE(fail_count, 0) + 1, last_studied = NOW() WHERE id = $1 AND user_id = $2',
+          [sentenceId, req.user.userId]
+        );
+      } else {
+        await queryDatabase(
+          'UPDATE sentences SET fail_count = COALESCE(fail_count, 0) + 1, last_studied = datetime(\'now\') WHERE id = ? AND user_id = ?',
+          [sentenceId, req.user.userId]
+        );
+      }
     }
+
+    // 업데이트된 문장 정보 확인
+    const updatedSentence = await queryDatabase(
+      'SELECT pass_count, fail_count, last_studied FROM sentences WHERE id = ? AND user_id = ?',
+      [sentenceId, req.user.userId]
+    );
 
     logger.info('시험 결과 저장 성공', { 
       userId: req.user.userId, 
       sentenceId, 
       passed,
-      clientIP 
+      clientIP,
+      updatedData: updatedSentence[0]
     });
 
     res.json({ message: '시험 결과가 저장되었습니다.' });
