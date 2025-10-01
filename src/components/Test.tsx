@@ -45,23 +45,31 @@ const Test: React.FC = () => {
   };
 
   const calculateScore = (originalText: string, userInput: string) => {
-    // 특수문자 제거
-    const cleanOriginal = originalText.replace(/[。、！？\s]/g, '');
-    const cleanUser = userInput.replace(/[。、！？\s]/g, '');
+    // 정규화 함수: 의미 없는 차이점 제거 (compareSentences와 동일)
+    const normalizeForComparison = (text: string) => {
+      return text
+        .replace(/\s+/g, '') // 모든 공백 제거
+        .replace(/[[\]()（）]/g, '') // 괄호 제거
+        .replace(/[、。！？]/g, '') // 일본어 구두점 제거
+        .trim();
+    };
     
-    if (cleanOriginal === cleanUser) {
+    const normalizedOriginal = normalizeForComparison(originalText);
+    const normalizedUser = normalizeForComparison(userInput);
+    
+    if (normalizedOriginal === normalizedUser) {
       return 100;
     }
     
-    // 단어 단위로 분리하여 비교
-    const originalWords = cleanOriginal.split('');
-    const userWords = cleanUser.split('');
+    // 정규화된 텍스트로 문자별 비교
+    const originalChars = normalizedOriginal.split('');
+    const userChars = normalizedUser.split('');
     
     let correctCount = 0;
-    const maxLength = Math.max(originalWords.length, userWords.length);
+    const maxLength = Math.max(originalChars.length, userChars.length);
     
     for (let i = 0; i < maxLength; i++) {
-      if (originalWords[i] === userWords[i]) {
+      if (originalChars[i] === userChars[i]) {
         correctCount++;
       }
     }
