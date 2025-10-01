@@ -70,88 +70,92 @@ const Test: React.FC = () => {
   };
 
   const compareSentences = (originalText: string, userInput: string) => {
+    // 정규화 함수: 의미 없는 차이점 제거
+    const normalizeForComparison = (text: string) => {
+      return text
+        .replace(/\s+/g, '') // 모든 공백 제거
+        .replace(/[\[\]()（）]/g, '') // 괄호 제거
+        .replace(/[、。！？]/g, '') // 일본어 구두점 제거
+        .trim();
+    };
+    
+    // 원본 텍스트는 그대로 유지 (표시용)
     const originalChars = originalText.split('');
     const userChars = userInput.split('');
     
-    // LCS (Longest Common Subsequence) 알고리즘을 사용하여 정확한 비교
-    const lcs = findLCS(originalChars, userChars);
+    // 정규화된 텍스트로 매칭 계산
+    const normalizedOriginal = normalizeForComparison(originalText);
+    const normalizedUser = normalizeForComparison(userInput);
     
+    // 정규화된 텍스트의 매칭 정보 계산
+    const matchInfo = calculateCharacterMatches(normalizedOriginal, normalizedUser);
+    
+    // 원본 텍스트를 기준으로 결과 생성
     const result = [];
     let originalIndex = 0;
     let userIndex = 0;
-    let lcsIndex = 0;
     
-    while (originalIndex < originalChars.length || userIndex < userChars.length) {
-      const originalChar = originalChars[originalIndex] || '';
-      const userChar = userChars[userIndex] || '';
+    for (let i = 0; i < originalChars.length; i++) {
+      const originalChar = originalChars[i];
       
-      // LCS에 포함된 문자인지 확인
-      const isInLCS = lcsIndex < lcs.length && 
-                     originalIndex < originalChars.length && 
-                     userIndex < userChars.length &&
-                     originalChar === lcs[lcsIndex] && 
-                     userChar === lcs[lcsIndex];
+      // 공백이나 특수문자는 항상 올바른 것으로 처리
+      if (/[\s\[\]()（）、。！？]/.test(originalChar)) {
+        result.push({
+          original: originalChar,
+          user: userIndex < userChars.length ? userChars[userIndex] : '',
+          isCorrect: true
+        });
+        if (userIndex < userChars.length) userIndex++;
+        continue;
+      }
+      
+      // 실제 문자 매칭 확인
+      const isMatched = matchInfo.matchedChars.has(originalIndex);
       
       result.push({
         original: originalChar,
-        user: userChar,
-        isCorrect: isInLCS
+        user: userIndex < userChars.length ? userChars[userIndex] : '',
+        isCorrect: isMatched
       });
       
-      if (isInLCS) {
-        originalIndex++;
+      if (isMatched && userIndex < userChars.length) {
         userIndex++;
-        lcsIndex++;
-      } else {
-        // 원본에만 있는 문자 (사용자가 빠뜨린 문자)
-        if (originalIndex < originalChars.length && 
-            (userIndex >= userChars.length || originalChar !== userChar)) {
-          originalIndex++;
-        }
-        // 사용자 입력에만 있는 문자 (사용자가 추가한 문자)
-        else if (userIndex < userChars.length) {
-          userIndex++;
-        }
       }
+      originalIndex++;
+    }
+    
+    // 사용자 입력에서 추가된 문자들 처리
+    while (userIndex < userChars.length) {
+      result.push({
+        original: '',
+        user: userChars[userIndex],
+        isCorrect: false
+      });
+      userIndex++;
     }
     
     return result;
   };
 
-  // LCS (Longest Common Subsequence) 찾기
-  const findLCS = (arr1: string[], arr2: string[]): string[] => {
-    const m = arr1.length;
-    const n = arr2.length;
-    const dp: number[][] = Array(m + 1).fill(null).map(() => Array(n + 1).fill(0));
+  // 문자 매칭 정보 계산
+  const calculateCharacterMatches = (text1: string, text2: string) => {
+    const chars1 = text1.split('');
+    const chars2 = text2.split('');
+    const matchedChars = new Set<number>();
     
-    // DP 테이블 채우기
-    for (let i = 1; i <= m; i++) {
-      for (let j = 1; j <= n; j++) {
-        if (arr1[i - 1] === arr2[j - 1]) {
-          dp[i][j] = dp[i - 1][j - 1] + 1;
-        } else {
-          dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
-        }
-      }
-    }
-    
-    // LCS 역추적
-    const lcs: string[] = [];
-    let i = m, j = n;
-    
-    while (i > 0 && j > 0) {
-      if (arr1[i - 1] === arr2[j - 1]) {
-        lcs.unshift(arr1[i - 1]);
-        i--;
-        j--;
-      } else if (dp[i - 1][j] > dp[i][j - 1]) {
-        i--;
+    let i = 0, j = 0;
+    while (i < chars1.length && j < chars2.length) {
+      if (chars1[i] === chars2[j]) {
+        matchedChars.add(i);
+        i++;
+        j++;
       } else {
-        j--;
+        // 다음 매칭을 찾기 위해 j를 증가
+        j++;
       }
     }
     
-    return lcs;
+    return { matchedChars };
   };
 
   const submitAnswer = () => {
