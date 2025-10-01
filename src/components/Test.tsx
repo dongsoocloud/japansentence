@@ -72,22 +72,86 @@ const Test: React.FC = () => {
   const compareSentences = (originalText: string, userInput: string) => {
     const originalChars = originalText.split('');
     const userChars = userInput.split('');
-    const maxLength = Math.max(originalChars.length, userChars.length);
+    
+    // LCS (Longest Common Subsequence) 알고리즘을 사용하여 정확한 비교
+    const lcs = findLCS(originalChars, userChars);
     
     const result = [];
+    let originalIndex = 0;
+    let userIndex = 0;
+    let lcsIndex = 0;
     
-    for (let i = 0; i < maxLength; i++) {
-      const originalChar = originalChars[i] || '';
-      const userChar = userChars[i] || '';
+    while (originalIndex < originalChars.length || userIndex < userChars.length) {
+      const originalChar = originalChars[originalIndex] || '';
+      const userChar = userChars[userIndex] || '';
+      
+      // LCS에 포함된 문자인지 확인
+      const isInLCS = lcsIndex < lcs.length && 
+                     originalIndex < originalChars.length && 
+                     userIndex < userChars.length &&
+                     originalChar === lcs[lcsIndex] && 
+                     userChar === lcs[lcsIndex];
       
       result.push({
         original: originalChar,
         user: userChar,
-        isCorrect: originalChar === userChar
+        isCorrect: isInLCS
       });
+      
+      if (isInLCS) {
+        originalIndex++;
+        userIndex++;
+        lcsIndex++;
+      } else {
+        // 원본에만 있는 문자 (사용자가 빠뜨린 문자)
+        if (originalIndex < originalChars.length && 
+            (userIndex >= userChars.length || originalChar !== userChar)) {
+          originalIndex++;
+        }
+        // 사용자 입력에만 있는 문자 (사용자가 추가한 문자)
+        else if (userIndex < userChars.length) {
+          userIndex++;
+        }
+      }
     }
     
     return result;
+  };
+
+  // LCS (Longest Common Subsequence) 찾기
+  const findLCS = (arr1: string[], arr2: string[]): string[] => {
+    const m = arr1.length;
+    const n = arr2.length;
+    const dp: number[][] = Array(m + 1).fill(null).map(() => Array(n + 1).fill(0));
+    
+    // DP 테이블 채우기
+    for (let i = 1; i <= m; i++) {
+      for (let j = 1; j <= n; j++) {
+        if (arr1[i - 1] === arr2[j - 1]) {
+          dp[i][j] = dp[i - 1][j - 1] + 1;
+        } else {
+          dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+        }
+      }
+    }
+    
+    // LCS 역추적
+    const lcs: string[] = [];
+    let i = m, j = n;
+    
+    while (i > 0 && j > 0) {
+      if (arr1[i - 1] === arr2[j - 1]) {
+        lcs.unshift(arr1[i - 1]);
+        i--;
+        j--;
+      } else if (dp[i - 1][j] > dp[i][j - 1]) {
+        i--;
+      } else {
+        j--;
+      }
+    }
+    
+    return lcs;
   };
 
   const submitAnswer = () => {
