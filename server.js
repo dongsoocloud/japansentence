@@ -617,7 +617,13 @@ app.get('/api/debug/users', async (req, res) => {
 
 // React 앱의 모든 라우트를 처리 (프로덕션 환경에서)
 if (process.env.NODE_ENV === 'production') {
-  app.get('/*', (req, res) => {
+  // 모든 라우트를 처리하는 미들웨어 (와일드카드 라우트 대신)
+  app.use((req, res, next) => {
+    // API 라우트는 제외
+    if (req.path.startsWith('/api/')) {
+      return next();
+    }
+    
     console.log('Handling request for:', req.path);
     const indexPath = path.join(__dirname, 'build', 'index.html');
     console.log('Looking for index.html at:', indexPath);
