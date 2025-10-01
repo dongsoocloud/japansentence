@@ -203,6 +203,9 @@
   resize: none;
   height: 50px;
   overflow-y: auto;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  box-sizing: border-box;
 }
 
 .edit-textarea:focus {
@@ -266,17 +269,21 @@
   font-size: 1rem;
   font-weight: 500;
   margin-bottom: 0.3rem;
-  line-height: 1.3;
+  line-height: 1.4;
   word-break: keep-all;
   white-space: pre-wrap;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 .japanese-text {
   color: #7f8c8d;
   font-size: 0.9rem;
-  line-height: 1.3;
+  line-height: 1.4;
   word-break: keep-all;
   white-space: pre-wrap;
+  overflow-wrap: break-word;
+  max-width: 100%;
   background-color: #f8f9fa;
   padding: 0.3rem 0.4rem;
   border-radius: 4px;
@@ -406,8 +413,9 @@
   .sentence-item {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.3rem;
-    padding: 0.3rem 0.5rem;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    min-height: auto;
   }
   
   .sentence-meta {
@@ -424,10 +432,15 @@
   
   .korean-meaning {
     font-size: 0.95rem;
+    line-height: 1.5;
+    word-break: break-word;
   }
   
   .japanese-text {
     font-size: 0.85rem;
+    line-height: 1.5;
+    word-break: break-word;
+    padding: 0.4rem;
   }
   
   .edit-form-content {
@@ -439,5 +452,57 @@
     min-width: auto;
     width: 100%;
     justify-content: center;
+  }
+}
+
+/* 더 작은 모바일 화면 (480px 이하) */
+@media (max-width: 480px) {
+  .sentence-list {
+    padding: 1rem 0.5rem;
+  }
+  
+  .sentence-item {
+    padding: 0.4rem;
+    gap: 0.4rem;
+  }
+  
+  .korean-meaning {
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+  
+  .japanese-text {
+    font-size: 0.8rem;
+    line-height: 1.6;
+    padding: 0.3rem;
+  }
+  
+  .sentence-meta {
+    font-size: 0.75rem;
+  }
+  
+  .sentence-stats {
+    gap: 0.5rem;
+  }
+  
+  .pass-count,
+  .fail-count {
+    font-size: 0.75rem;
+  }
+  
+  .edit-textarea {
+    font-size: 0.85rem;
+    padding: 0.3rem;
+    min-height: 40px;
+    height: auto;
+  }
+  
+  .edit-actions {
+    gap: 0.5rem;
+  }
+  
+  .edit-actions button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
   }
 }
