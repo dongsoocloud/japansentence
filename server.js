@@ -33,6 +33,7 @@ if (usePostgreSQL) {
 const app = express();
 const PORT = process.env.PORT || 5000;
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+const path = require('path');
 
 // 로거 설정
 const logger = winston.createLogger({
@@ -167,6 +168,12 @@ async function queryDatabase(sql, params = []) {
 // 미들웨어
 app.use(cors());
 app.use(express.json());
+
+// React 앱을 정적 파일로 서빙 (프로덕션 환경에서)
+if (process.env.NODE_ENV === 'production') {
+  // React 빌드 파일 서빙
+  app.use(express.static(path.join(__dirname, 'build')));
+}
 
 // JWT 토큰 인증 미들웨어
 const authenticateToken = (req, res, next) => {
@@ -592,6 +599,13 @@ app.get('/api/debug/users', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+// React 앱의 모든 라우트를 처리 (프로덕션 환경에서)
+if (process.env.NODE_ENV === 'production') {
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+  });
+}
 
 // 서버 시작
 async function startServer() {
