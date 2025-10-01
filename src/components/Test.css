@@ -1,0 +1,377 @@
+.test-setup {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.test-setup-container {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.test-setup h1 {
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+}
+
+.test-config {
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.form-group select,
+.form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #e1e8ed;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.clear-date-btn {
+  background-color: #95a5a6;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: background-color 0.3s;
+}
+
+.clear-date-btn:hover {
+  background-color: #7f8c8d;
+}
+
+.start-test-btn {
+  width: 100%;
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.start-test-btn:hover:not(:disabled) {
+  background-color: #229954;
+}
+
+.start-test-btn:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
+}
+
+.test {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.test-container {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.test-progress {
+  margin-bottom: 2rem;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background-color: #e1e8ed;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #3498db;
+  transition: width 0.3s;
+}
+
+.progress-text {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+.test-question h2 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+}
+
+.korean-meaning {
+  background-color: #f8f9fa;
+  padding: 2rem;
+  border-radius: 8px;
+  border: 2px solid #e1e8ed;
+  font-size: 1.3rem;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-weight: 500;
+  line-height: 1.6;
+  word-break: keep-all;
+}
+
+.user-input-section {
+  margin-bottom: 1.5rem;
+}
+
+.user-input {
+  width: 100%;
+  padding: 1.5rem;
+  border: 2px solid #e1e8ed;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  resize: vertical;
+  transition: border-color 0.3s;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+  min-height: 120px;
+}
+
+.user-input:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.submit-answer-btn {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-answer-btn:hover {
+  background-color: #2980b9;
+}
+
+.test-result {
+  border-top: 2px solid #e1e8ed;
+  padding-top: 2rem;
+  margin-top: 2rem;
+}
+
+.score-display {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.score-label {
+  font-size: 1.1rem;
+  color: #7f8c8d;
+  margin-right: 0.5rem;
+}
+
+.score-value {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.score-value.pass {
+  color: #27ae60;
+}
+
+.score-value.fail {
+  color: #e74c3c;
+}
+
+.answer-comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.correct-answer,
+.user-answer {
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #e1e8ed;
+}
+
+.correct-answer h3,
+.user-answer h3 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.answer-text {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif;
+}
+
+.correct {
+  color: #27ae60;
+  font-weight: 500;
+}
+
+.incorrect {
+  color: #e74c3c;
+  background-color: #fdf2f2;
+  padding: 0.1rem 0.2rem;
+  border-radius: 3px;
+}
+
+.next-question-btn {
+  width: 100%;
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.next-question-btn:hover {
+  background-color: #229954;
+}
+
+.test-completed {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.test-completed-container {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.test-completed h1 {
+  color: #27ae60;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+}
+
+.test-summary {
+  margin-bottom: 2rem;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.summary-label {
+  color: #7f8c8d;
+  font-weight: 500;
+}
+
+.summary-value {
+  color: #2c3e50;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.test-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.restart-btn,
+.view-sentences-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: all 0.3s;
+  display: inline-block;
+}
+
+.restart-btn {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.restart-btn:hover {
+  background-color: #2980b9;
+}
+
+.view-sentences-btn {
+  background-color: #95a5a6;
+  color: white;
+  border: 2px solid #95a5a6;
+}
+
+.view-sentences-btn:hover {
+  background-color: #7f8c8d;
+  border-color: #7f8c8d;
+}
+
+.error-message {
+  color: #e74c3c;
+  text-align: center;
+  padding: 1rem;
+  background-color: #fdf2f2;
+  border-radius: 5px;
+  border: 1px solid #f5c6cb;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 1200px) {
+  .test,
+  .test-setup,
+  .test-completed {
+    max-width: 100%;
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .test,
+  .test-setup,
+  .test-completed {
+    padding: 1rem;
+  }
+  
+  .answer-comparison {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .test-actions {
+    flex-direction: column;
+  }
+}

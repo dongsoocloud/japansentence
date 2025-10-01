@@ -1,0 +1,318 @@
+.sentence-list {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.sentence-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.sentence-list-header h1 {
+  color: #2c3e50;
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.filter-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.date-filter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.date-filter label {
+  color: #555;
+  font-weight: 500;
+}
+
+.date-filter input {
+  padding: 0.5rem;
+  border: 2px solid #e1e8ed;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.clear-filter-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s;
+}
+
+.clear-filter-btn:hover {
+  background-color: #c0392b;
+}
+
+.hide-japanese-control {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.hide-japanese-control label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #555;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.hide-japanese-control input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.add-sentence-btn {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.add-sentence-btn:hover {
+  background-color: #2980b9;
+}
+
+.sentences-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.date-group {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.date-header {
+  background-color: #3498db;
+  color: white;
+  padding: 0.5rem 0.8rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.sentences-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.sentence-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0.4rem 0.8rem;
+  border-bottom: 1px solid #f1f3f4;
+  gap: 1rem;
+}
+
+.sentence-item:last-child {
+  border-bottom: none;
+}
+
+.sentence-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.korean-meaning {
+  color: #2c3e50;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+  line-height: 1.3;
+  word-break: keep-all;
+  white-space: pre-wrap;
+}
+
+.japanese-text {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  line-height: 1.3;
+  word-break: keep-all;
+  white-space: pre-wrap;
+  background-color: #f8f9fa;
+  padding: 0.3rem 0.4rem;
+  border-radius: 4px;
+  border: 1px solid #e1e8ed;
+}
+
+.japanese-text.hidden {
+  background-color: #f8f9fa;
+  color: #f8f9fa;
+  user-select: none;
+}
+
+.sentence-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 140px;
+  flex-shrink: 0;
+  font-size: 0.8rem;
+}
+
+.sentence-stats {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.pass-count {
+  color: #27ae60;
+  font-weight: 500;
+}
+
+.fail-count {
+  color: #e74c3c;
+  font-weight: 500;
+}
+
+.last-studied {
+  color: #95a5a6;
+  font-size: 0.75rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.empty-state p {
+  color: #7f8c8d;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.add-sentence-link {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.3s;
+}
+
+.add-sentence-link:hover {
+  background-color: #2980b9;
+  color: white;
+}
+
+.error-message {
+  color: #e74c3c;
+  text-align: center;
+  padding: 1rem;
+  background-color: #fdf2f2;
+  border-radius: 5px;
+  border: 1px solid #f5c6cb;
+  margin-bottom: 1rem;
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.1rem;
+  color: #7f8c8d;
+}
+
+@media (max-width: 1200px) {
+  .sentence-list {
+    max-width: 100%;
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .sentence-list {
+    padding: 1rem;
+  }
+  
+  .sentence-list-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .header-actions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .filter-controls {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .date-filter {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .sentence-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+    padding: 0.3rem 0.5rem;
+  }
+  
+  .sentence-meta {
+    min-width: auto;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .sentence-stats {
+    justify-content: flex-start;
+  }
+  
+  .korean-meaning {
+    font-size: 0.95rem;
+  }
+  
+  .japanese-text {
+    font-size: 0.85rem;
+  }
+}

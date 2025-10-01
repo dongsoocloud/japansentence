@@ -7,21 +7,37 @@
     "@testing-library/jest-dom": "^6.9.0",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.19",
     "@types/jest": "^27.5.2",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^16.18.126",
     "@types/react": "^19.1.16",
     "@types/react-dom": "^19.1.9",
+    "@types/react-router-dom": "^5.3.3",
+    "axios": "^1.12.2",
+    "bcryptjs": "^3.0.2",
+    "better-sqlite3": "^12.4.1",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "react-router-dom": "^7.9.3",
     "react-scripts": "5.0.1",
+    "sqlite3": "^5.1.7",
     "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "winston": "^3.18.3",
+    "winston-daily-rotate-file": "^5.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "server": "node server.js",
+    "dev": "concurrently \"npm run server\" \"npm start\""
   },
   "eslintConfig": {
     "extends": [
@@ -40,5 +56,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
   }
 }
