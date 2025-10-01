@@ -19,9 +19,15 @@ if (usePostgreSQL) {
     ssl: isProduction ? { rejectUnauthorized: false } : false
   });
 } else {
-  // SQLite 사용 (로컬 개발 시)
-  const Database = require('better-sqlite3');
-  db = new Database('jpsentence.db');
+  // SQLite 사용 (로컬 개발 시) - 선택적 로드
+  try {
+    const Database = require('better-sqlite3');
+    db = new Database('jpsentence.db');
+  } catch (error) {
+    console.error('SQLite를 사용할 수 없습니다. PostgreSQL을 사용하세요.');
+    console.error('로컬 개발을 위해: npm install better-sqlite3');
+    process.exit(1);
+  }
 }
 
 const app = express();
