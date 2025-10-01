@@ -84,7 +84,12 @@ const Register: React.FC<RegisterProps> = ({ onLogin }) => {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h2>회원가입</h2>
+        <div className="auth-header">
+          <div className="app-title">
+            <span className="title-秀">秀</span>: <span className="title-일">일</span>본어 <span className="title-통">통</span>문장 <span className="title-암">암</span>기
+          </div>
+          <h2>회원가입</h2>
+        </div>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="username">사용자명</label>

@@ -3,24 +3,56 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--accent-color) 0%, #764ba2 100%);
   padding: 2rem;
 }
 
 .auth-card {
-  background: white;
+  background: var(--card-bg);
   padding: 2rem;
   border-radius: 10px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 25px var(--shadow);
+  border: 1px solid var(--border-color);
   width: 100%;
   max-width: 400px;
 }
 
-.auth-card h2 {
+.auth-header {
   text-align: center;
   margin-bottom: 2rem;
-  color: #2c3e50;
+}
+
+.auth-header .app-title {
   font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.auth-header .title-秀 {
+  color: #e91e63; /* 분홍색 */
+  font-size: 2rem;
+}
+
+.auth-header .title-일 {
+  color: #ff6b35; /* 주황색 */
+  font-weight: 900;
+}
+
+.auth-header .title-통 {
+  color: #4ecdc4; /* 청록색 */
+  font-weight: 900;
+}
+
+.auth-header .title-암 {
+  color: #a8e6cf; /* 연두색 */
+  font-weight: 900;
+}
+
+.auth-card h2 {
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  margin: 0;
 }
 
 .form-group {
@@ -30,56 +62,61 @@
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  color: #555;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
 .form-group input {
   width: 100%;
   padding: 0.75rem;
-  border: 2px solid #e1e8ed;
+  border: 2px solid var(--input-border);
   border-radius: 5px;
   font-size: 1rem;
+  background-color: var(--input-bg);
+  color: var(--text-primary);
   transition: border-color 0.3s;
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: #3498db;
+  border-color: var(--accent-color);
 }
 
 .submit-btn {
   width: 100%;
-  background-color: #3498db;
-  color: white;
+  background-color: var(--button-bg);
+  color: var(--button-text);
   border: none;
   padding: 0.75rem;
   border-radius: 5px;
   font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
+  font-weight: 500;
 }
 
 .submit-btn:hover:not(:disabled) {
-  background-color: #2980b9;
+  background-color: var(--button-hover);
+  transform: translateY(-1px);
 }
 
 .submit-btn:disabled {
-  background-color: #bdc3c7;
+  background-color: var(--text-muted);
   cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .error-message {
-  color: #e74c3c;
+  color: var(--danger-color);
   text-align: center;
   margin-bottom: 1rem;
   padding: 1rem;
-  background-color: #fdf2f2;
+  background-color: var(--bg-secondary);
   border-radius: 8px;
-  border: 1px solid #f5c6cb;
+  border: 1px solid var(--border-color);
   font-size: 0.95rem;
   line-height: 1.4;
-  box-shadow: 0 2px 4px rgba(231, 76, 60, 0.1);
+  box-shadow: 0 2px 4px var(--shadow);
   animation: fadeIn 0.3s ease-in;
   position: relative;
   z-index: 10;
@@ -104,16 +141,18 @@
 .auth-link {
   text-align: center;
   margin-top: 1.5rem;
-  color: #555;
+  color: var(--text-secondary);
 }
 
 .auth-link a {
-  color: #3498db;
+  color: var(--accent-color);
   text-decoration: none;
   font-weight: 500;
+  transition: color 0.3s ease;
 }
 
 .auth-link a:hover {
+  color: var(--accent-hover);
   text-decoration: underline;
 }
 
