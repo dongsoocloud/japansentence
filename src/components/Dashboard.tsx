@@ -16,6 +16,16 @@ const Dashboard: React.FC = () => {
     fetchDashboardData();
   }, []);
 
+  // 페이지가 포커스될 때마다 데이터 새로고침
+  useEffect(() => {
+    const handleFocus = () => {
+      fetchDashboardData();
+    };
+
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
+  }, []);
+
   const fetchDashboardData = async () => {
     try {
       const sentences = await sentenceAPI.getSentences();

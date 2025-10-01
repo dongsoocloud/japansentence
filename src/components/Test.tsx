@@ -275,6 +275,9 @@ const Test: React.FC = () => {
             <button onClick={restartTest} className="restart-btn">
               다시 시험 보기
             </button>
+            <a href="/dashboard" className="dashboard-btn">
+              대시보드로 이동
+            </a>
             <a href="/sentences" className="view-sentences-btn">
               문장 목록 보기
             </a>
