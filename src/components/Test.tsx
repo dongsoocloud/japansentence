@@ -74,7 +74,7 @@ const Test: React.FC = () => {
     const normalizeForComparison = (text: string) => {
       return text
         .replace(/\s+/g, '') // 모든 공백 제거
-        .replace(/[\[\]()（）]/g, '') // 괄호 제거
+        .replace(/[[\]()（）]/g, '') // 괄호 제거
         .replace(/[、。！？]/g, '') // 일본어 구두점 제거
         .trim();
     };
@@ -99,7 +99,7 @@ const Test: React.FC = () => {
       const originalChar = originalChars[i];
       
       // 공백이나 특수문자는 항상 올바른 것으로 처리
-      if (/[\s\[\]()（）、。！？]/.test(originalChar)) {
+      if (/[\s[\]()（）、。！？]/.test(originalChar)) {
         result.push({
           original: originalChar,
           user: userIndex < userChars.length ? userChars[userIndex] : '',
