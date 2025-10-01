@@ -214,3 +214,17 @@
 {"clientIP":"::1","level":"info","message":"시험 결과 저장 성공","passed":false,"sentenceId":2,"timestamp":"2025-10-01T12:43:17.290Z","userId":1}
 {"clientIP":"::1","level":"info","message":"시험 결과 제출 시도","passed":false,"score":0,"sentenceId":10,"timestamp":"2025-10-01T12:43:19.506Z","userId":1}
 {"clientIP":"::1","level":"info","message":"시험 결과 저장 성공","passed":false,"sentenceId":10,"timestamp":"2025-10-01T12:43:19.512Z","userId":1}
+{"clientIP":"::1","japaneseText":"ghj","koreanMeaning":"dfg","level":"info","message":"문장 등록 시도","timestamp":"2025-10-01T13:12:11.419Z","userId":1}
+{"clientIP":"::1","level":"info","message":"문장 등록 성공","sentenceId":12,"timestamp":"2025-10-01T13:12:11.429Z","userId":1}
+{"clientIP":"::1","count":5,"date":null,"level":"info","message":"시험 문장 조회 시도","timestamp":"2025-10-01T13:12:13.737Z","userId":1}
+{"clientIP":"::1","count":5,"level":"info","message":"시험 문장 조회 성공","timestamp":"2025-10-01T13:12:13.739Z","userId":1}
+{"clientIP":"::1","level":"info","message":"시험 결과 제출 시도","passed":true,"score":100,"sentenceId":1,"timestamp":"2025-10-01T13:12:16.724Z","userId":1}
+{"clientIP":"::1","level":"info","message":"시험 결과 저장 성공","passed":true,"sentenceId":1,"timestamp":"2025-10-01T13:12:16.741Z","userId":1}
+{"clientIP":"::1","level":"info","message":"시험 결과 제출 시도","passed":false,"score":0,"sentenceId":2,"timestamp":"2025-10-01T13:12:19.299Z","userId":1}
+{"clientIP":"::1","level":"info","message":"시험 결과 저장 성공","passed":false,"sentenceId":2,"timestamp":"2025-10-01T13:12:19.315Z","userId":1}
+{"clientIP":"::1","level":"info","message":"시험 결과 제출 시도","passed":false,"score":0,"sentenceId":11,"timestamp":"2025-10-01T13:12:27.277Z","userId":1}
+{"clientIP":"::1","level":"info","message":"시험 결과 저장 성공","passed":false,"sentenceId":11,"timestamp":"2025-10-01T13:12:27.284Z","userId":1}
+{"clientIP":"::1","level":"info","message":"시험 결과 제출 시도","passed":false,"score":0,"sentenceId":10,"timestamp":"2025-10-01T13:12:29.192Z","userId":1}
+{"clientIP":"::1","level":"info","message":"시험 결과 저장 성공","passed":false,"sentenceId":10,"timestamp":"2025-10-01T13:12:29.209Z","userId":1}
+{"clientIP":"::1","level":"info","message":"시험 결과 제출 시도","passed":false,"score":0,"sentenceId":12,"timestamp":"2025-10-01T13:12:30.993Z","userId":1}
+{"clientIP":"::1","level":"info","message":"시험 결과 저장 성공","passed":false,"sentenceId":12,"timestamp":"2025-10-01T13:12:31.011Z","userId":1}
