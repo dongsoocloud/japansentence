@@ -152,7 +152,15 @@ async function initializeDatabase() {
 // 데이터베이스 쿼리 헬퍼 함수
 async function queryDatabase(sql, params = []) {
   if (usePostgreSQL) {
-    const result = await pool.query(sql, params);
+    // SQLite 문법을 PostgreSQL 문법으로 변환
+    let pgSql = sql;
+    let paramIndex = 1;
+    while (pgSql.includes('?')) {
+      pgSql = pgSql.replace('?', `$${paramIndex}`);
+      paramIndex++;
+    }
+    
+    const result = await pool.query(pgSql, params);
     return result.rows;
   } else {
     const stmt = db.prepare(sql);
