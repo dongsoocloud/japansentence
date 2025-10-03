@@ -61,20 +61,35 @@ const Test: React.FC = () => {
       return 100;
     }
     
-    // 정규화된 텍스트로 문자별 비교
-    const originalChars = normalizedOriginal.split('');
-    const userChars = normalizedUser.split('');
+    // LCS 알고리즘을 사용한 최적 매칭 계산
+    const lcsLength = calculateLCS(normalizedOriginal, normalizedUser);
+    const maxLength = Math.max(normalizedOriginal.length, normalizedUser.length);
     
-    let correctCount = 0;
-    const maxLength = Math.max(originalChars.length, userChars.length);
+    return Math.round((lcsLength / maxLength) * 100);
+  };
+
+  // LCS (Longest Common Subsequence) 계산
+  const calculateLCS = (text1: string, text2: string) => {
+    const chars1 = text1.split('');
+    const chars2 = text2.split('');
+    const m = chars1.length;
+    const n = chars2.length;
     
-    for (let i = 0; i < maxLength; i++) {
-      if (originalChars[i] === userChars[i]) {
-        correctCount++;
+    // DP 테이블 생성
+    const dp = Array(m + 1).fill(null).map(() => Array(n + 1).fill(0));
+    
+    // LCS 계산
+    for (let i = 1; i <= m; i++) {
+      for (let j = 1; j <= n; j++) {
+        if (chars1[i-1] === chars2[j-1]) {
+          dp[i][j] = dp[i-1][j-1] + 1;
+        } else {
+          dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]);
+        }
       }
     }
     
-    return Math.round((correctCount / maxLength) * 100);
+    return dp[m][n];
   };
 
   const compareSentences = (originalText: string, userInput: string) => {
