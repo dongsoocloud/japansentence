@@ -87,7 +87,7 @@ const Test: React.FC = () => {
         .trim();
     };
     
-    // 원본 텍스트는 그대로 유지 (표시용)
+    // 원본 텍스트와 사용자 입력을 문자 배열로 변환
     const originalChars = originalText.split('');
     const userChars = userInput.split('');
     
@@ -100,8 +100,7 @@ const Test: React.FC = () => {
     
     // 원본 텍스트를 기준으로 결과 생성
     const result = [];
-    let originalIndex = 0;
-    let userIndex = 0;
+    let normalizedIndex = 0;
     
     for (let i = 0; i < originalChars.length; i++) {
       const originalChar = originalChars[i];
@@ -110,47 +109,43 @@ const Test: React.FC = () => {
       if (/[\s[\]()（）、。！？]/.test(originalChar)) {
         result.push({
           original: originalChar,
-          user: userIndex < userChars.length ? userChars[userIndex] : '',
+          user: userChars[i] || '',
           isCorrect: true
         });
-        if (userIndex < userChars.length) userIndex++;
         continue;
       }
       
-      // 실제 문자 매칭 확인
-      const isMatched = matchInfo.matchedChars.has(originalIndex);
+      // 정규화된 텍스트에서의 매칭 확인
+      const isMatched = matchInfo.matchedChars.has(normalizedIndex);
       
       result.push({
         original: originalChar,
-        user: userIndex < userChars.length ? userChars[userIndex] : '',
+        user: userChars[i] || '',
         isCorrect: isMatched
       });
       
-      if (isMatched && userIndex < userChars.length) {
-        userIndex++;
-      }
-      originalIndex++;
+      normalizedIndex++;
     }
     
     // 사용자 입력에서 추가된 문자들 처리
-    while (userIndex < userChars.length) {
+    for (let i = originalChars.length; i < userChars.length; i++) {
       result.push({
         original: '',
-        user: userChars[userIndex],
+        user: userChars[i],
         isCorrect: false
       });
-      userIndex++;
     }
     
     return result;
   };
 
-  // 문자 매칭 정보 계산
+  // 문자 매칭 정보 계산 (간단하고 정확한 버전)
   const calculateCharacterMatches = (text1: string, text2: string) => {
     const chars1 = text1.split('');
     const chars2 = text2.split('');
     const matchedChars = new Set<number>();
     
+    // 간단한 순차 매칭
     let i = 0, j = 0;
     while (i < chars1.length && j < chars2.length) {
       if (chars1[i] === chars2[j]) {
